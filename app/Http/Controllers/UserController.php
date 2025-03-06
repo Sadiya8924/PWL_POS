@@ -19,16 +19,23 @@ class UserController extends Controller
         // ];
         // UserModel::create($data);
 
-        $user = UserModel::firstOrNew(
+        $user = UserModel::create(
             [
-                'username' => 'manager33',
-                'nama'=> 'Manager Tiga Tiga',
+                'username' => 'manager11',
+                'nama'=> 'Manager11',
                 'password' => Hash::make('12345'),
                 'level_id' => 2
             ]
         );
+        $user->username = 'manager12';
+
         $user->save();
 
-        return view('user',['data' => $user]);
-    }
+        $user->wasChanged(); //true
+        $user->wasChanged('username'); //true
+        $user->wasChanged('nama'); //false
+        $user->wasChanged(['level_id', 'username']); //true
+        dd($user->wasChanged(['nama', 'username'])); //true
+
+    }    
 }
