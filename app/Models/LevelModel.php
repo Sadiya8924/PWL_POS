@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LevelModel extends Model
 {
-    use HasFactory;
-
-    protected $table = 'm_level'; // Sesuaikan dengan nama tabel di database
-    protected $primaryKey = 'level_id';
-
-    protected $fillable = ['level_nama', 'level_kode']; // Sesuaikan dengan kolom yang ada
+    protected $table = 'm_level'; 
+    protected $primaryKey = 'level_id'; 
+    protected $fillable = ['level_kode', 'level_nama']; 
 }
