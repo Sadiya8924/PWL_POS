@@ -258,39 +258,56 @@ class UserController extends Controller
         return view('user.confirm_ajax', ['user' => $user]);
     }
 
+    // public function delete_ajax(Request $request, $id){
+    //     //ceek apakah request dari ajaz
+    //     if ($request->ajax() || $request->wantsJson()){
+    //         $user = UserModel::find($id);
+    //         if ($user){
+    //             $user->delete();
+    //             return response()->json([
+    //                 'status' => true,
+    //                 'message' => 'Data berhasil dihapus'
+    //             ]);
+    //         }else{
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'Data tidak di temukan'
+    //             ]);
+    //         }
+    //         return redirect('/');
+    //     }
+    // }
+
     public function delete_ajax(Request $request, $id){
-        //ceek apakah request dari ajaz
-        if ($request->ajax() || $request->wantsJson()){
+        // cek apakah request dari ajax
+        if ($request->ajax() || $request->wantsJson()) {
             $user = UserModel::find($id);
-            if ($user){
-                $user->delete();
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Data berhasil dihapus'
-                ]);
-            }else{
+            if ($user) {
+                try {
+                    $user->delete();
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil dihapus'
+                    ]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak dapat dihapus karena masih terdapat tabel lain yang terkait dengan data ini.'
+                    ]);
+                }
+            } else {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Data tidak di temukan'
+                    'message' => 'Data tidak ditemukan'
                 ]);
             }
-            return redirect('/');
         }
+
+        return redirect('/');
     }
 
-    public function detail_ajax($id) {
-        $user = UserModel::find($id);
-    
-        if (!$user) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak ditemukan'
-            ]);
-        }
-    
-        return response()->json([
-            'status' => true,
-            'data' => $user
-        ]);
-    }    
+    public function createAjax(){
+        return view('user.create_ajax');
+    }
+
 }
