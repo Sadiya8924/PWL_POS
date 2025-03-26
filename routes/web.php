@@ -21,7 +21,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
     Route::group(['prefix' => 'user'], function () {
-        Route::middleware(['authortize:ADM'])->group(function () {
+        Route::middleware(['authortize:MNG'])->group(function () {
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk json untuk datables
             Route::get('/create', [UserController::class, 'create']); // menampilkan halaman form tambah user
