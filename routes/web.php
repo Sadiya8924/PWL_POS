@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use App\Models\User;
 
 Route::pattern('id', '[0-9]+'); //Artinya ketika ada paremeter {id}. maka harus berupa angka
@@ -16,12 +17,13 @@ Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
     Route::group(['prefix' => 'user'], function () {
-        Route::middleware(['authortize:MNG'])->group(function () {
+        Route::middleware(['authortize:ADM,MNG'])->group(function () {
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
             Route::post('/list', [UserController::class, 'list']); // menampilkan data user dalam bentuk json untuk datables
             Route::get('/create', [UserController::class, 'create']); // menampilkan halaman form tambah user
@@ -61,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::group(['prefix' => 'kategori'], function () {
-        Route::middleware(['authortize:ADM,MNG'])->group(function () {
+        Route::middleware(['authortize:ADM,MNG,STF'])->group(function () {
             Route::get('/', [KategoriController::class, 'index']); // menampilkan halaman awal kategori
             Route::post('/list', [KategoriController::class, 'list']); // menampilkan data kategori dalam bentuk json untuk datables
             Route::get('/create', [KategoriController::class, 'create']); // menampilkan halaman form tambah kategori
