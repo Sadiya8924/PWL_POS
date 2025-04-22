@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ProfilController;
 use App\Models\KategoriModel;
 use App\Models\User;
 
@@ -23,6 +24,13 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
+
+    Route::group(['prefix' => 'profil'], function () {
+       Route::get('/', [ProfilController::class, 'index']);
+       Route::get('/import', [ProfilController::class, 'import']);
+       Route::post('/import_ajax', [ProfilController::class, 'import_ajax']); 
+    });
+
     Route::group(['prefix' => 'user'], function () {
         Route::middleware(['authortize:ADM,MNG'])->group(function () {
             Route::get('/', [UserController::class, 'index']); // menampilkan halaman awal user
