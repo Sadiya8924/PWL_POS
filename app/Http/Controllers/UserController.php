@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use Monolog\Level;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\PDF;
+
 
 class UserController extends Controller
 {
@@ -420,4 +422,18 @@ class UserController extends Controller
         exit;
     }
 
+    public function export_pdf(){
+        $user = UserModel::select('level_id', 'username', 'nama')
+            ->orderBy('level_id')
+            ->with('level')
+            ->get();
+
+        // use Barryvdh\DOmPDF\Facade as PDF;
+        $pdf = PDF::loadView('user.export_pdf', ['user' => $user]);
+        $pdf->setPaper('a4', 'portrait'); // set kertas A4 potrait
+        $pdf->setOption("isRemoteEnabled", true); // set agar bisa menampilkan gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data user ' .date('Y-m-d_H-i-s').'.pdf'); // download file pdf
+    }
 }

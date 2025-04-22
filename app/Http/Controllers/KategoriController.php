@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\PDF;
 
 
 class KategoriController extends Controller
@@ -432,5 +433,18 @@ class KategoriController extends Controller
 
         $writer->save('php://output');
         exit;
+    }
+
+    public function export_pdf(){
+        $kategori = KategoriModel::select('kategori_id', 'kategori_nama', 'kategori_kode')
+            ->get();
+
+        // use Barryvdh\DOmPDF\Facade as PDF;
+        $pdf = PDF::loadView('Kategori.export_pdf', ['kategori' => $kategori]);
+        $pdf->setPaper('a4', 'portrait'); // set kertas A4 potrait
+        $pdf->setOption("isRemoteEnabled", true); // set agar bisa menampilkan gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data Kategori ' .date('Y-m-d_H-i-s').'.pdf'); // download file pdf
     }
 }

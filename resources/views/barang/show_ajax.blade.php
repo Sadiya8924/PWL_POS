@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <th class="text-right col-3">Kategori barang :</th>
-                <td class="col-9">{{ $kategori->kategori_nama }}</td>
+                <td class="col-9">{{ $barang->Kategori->kategori_nama }}</td>
             </tr>
             <tr>
                 <th class="text-right col-3"> Harga Beli :</th>
