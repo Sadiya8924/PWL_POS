@@ -233,7 +233,7 @@ class StokController extends Controller
                             // fallback kalau ternyata berupa string
                             $tanggal = date('Y-m-d H:i:s', strtotime($tanggal_excel));
                         }
-                
+
                         $insert[] = [
                             'supplier_id' => $value['A'],
                             'barang_id' => $value['B'],
@@ -260,6 +260,7 @@ class StokController extends Controller
         }
         return redirect('/stok');
     }
+
 
     public function export_excel()
     {

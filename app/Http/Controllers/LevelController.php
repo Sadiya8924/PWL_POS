@@ -386,9 +386,7 @@ class LevelController extends Controller
     public function export_excel()
     {
         // ambil data level yang akan di export
-        $level = LevelModel::select('kategori_id',  'level_nama', 'harga_beli', 'harga_jual')
-            // ->orderBy('kategori_id')
-            // ->with('kategori')
+        $level = LevelModel::select('level_nama',  'level_kode',)
             ->get();
         // load library excel
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

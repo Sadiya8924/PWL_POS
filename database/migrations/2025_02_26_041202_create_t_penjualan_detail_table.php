@@ -11,16 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_penjualan_detail', function (Blueprint $table) {
-            $table->id('detail_id');
-            $table->unsignedBigInteger('penjualan_id')->index(); //indexing untuk foreignkey
-            $table->unsignedBigInteger('barang_id')->index(); 
-            $table->string('harga');
-            $table->string('jumlah');
-            $table->timestamps();
-
-            $table->foreign('penjualan_id')->references('penjualan_id')->on('t_penjualan');
-            $table->foreign('barang_id')->references('barang_id')->on('m_barang');
+        Schema::table('m_user', function (Blueprint $table) {
+            $table->string('foto')->nullable();
         });
     }
 
@@ -29,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_penjualan_detail');
+        Schema::table('m_user', function (Blueprint $table) {
+            $table->dropColumn('foto');
+        });
     }
 };

@@ -9,8 +9,9 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokController;
+use App\Http\Controllers\PenjualanController;
 use App\Models\KategoriModel;
 use App\Models\User;
 
@@ -26,10 +27,11 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
 
-    Route::group(['prefix' => 'profil'], function () {
-       Route::get('/', [ProfilController::class, 'index']);
-       Route::get('/import', [ProfilController::class, 'import']);
-       Route::post('/import_ajax', [ProfilController::class, 'import_ajax']); 
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'show']);
+        Route::get('/edit', [ProfileController::class, 'edit']);
+        Route::put('/', [ProfileController::class, 'update'])->name('profile.upload'); 
+        Route::delete('/delete-picture', [ProfileController::class, 'deletePicture'])->name('profile.delete-picture');
     });
 
     Route::group(['prefix' => 'user'], function () {
@@ -168,6 +170,25 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/import_ajax', [StokController::class, 'import_ajax']); // ajax import excel
             Route::get('/export_excel', [StokController::class, 'export_excel']); // ajax export excel
             Route::get('/export_pdf', [StokController::class, 'export_pdf']); // ajax export pdf
+        });
+    }); 
+
+    Route::group(['prefix' => 'penjualan'], function () {
+        Route::middleware(['authortize:ADM,MNG,STF'])->group(function () {
+            Route::get('/', [PenjualanController::class, 'index']); // menampilkan halaman awal Penjualan
+            Route::post('/list', [PenjualanController::class, 'list']); // menampilkan data Penjualan dalam bentuk json untuk datables
+            Route::get('/create_ajax', [PenjualanController::class, 'create_ajax']); // menampilkan halaman form tambah Penjualan
+            Route::post('/ajax', [PenjualanController::class, 'store_ajax']); // menyimpan data Penjualan baru
+            Route::get('/{id}/show_ajax', [PenjualanController::class, 'show_ajax']); // menampilkan detail Penjualan
+            Route::get('/{id}/edit_ajax', [PenjualanController::class, 'edit_ajax']); // menampilkan halaman form edit Penjualan
+            Route::put('/{id}/update_ajax', [PenjualanController::class, 'update_ajax']); // menyimpan data Penjualan yang diubah
+            Route::get('/{id}/delete_ajax', [PenjualanController::class, 'confirm_ajax']); //untuk tampilkan form confirm delete Penjualan ajax
+            Route::delete('/{id}/delete_ajax', [PenjualanController::class, 'delete_ajax']); // Untuk hapus data Penjualan Ajax
+            Route::delete('/{id}', [PenjualanController::class, 'destroy']); // menghapus data Penjualan
+            Route::get('/import', [PenjualanController::class, 'import']); // ajax form uplaod excel
+            Route::post('/import_ajax', [PenjualanController::class, 'import_ajax']); // ajax import excel
+            Route::get('/export_excel', [PenjualanController::class, 'export_excel']); // ajax export excel
+            Route::get('/export_pdf', [PenjualanController::class, 'export_pdf']); // ajax export pdf
         });
     }); 
 });
